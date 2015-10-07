@@ -34,7 +34,8 @@ public class FunctionalLoginUseCasesTest {
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception{
+        login();
     }
 
     @After
@@ -102,6 +103,15 @@ public class FunctionalLoginUseCasesTest {
         driver.findElement(By.name("login")).sendKeys("admin");
         driver.findElement(By.cssSelector("button.btn.btn-success")).click();
         assertTrue(isElementPresent(By.linkText("admin")));
+    }
+
+    @Test
+    public void testEditWithoutTitle() throws Exception {
+        driver.findElement(By.xpath("(//a[contains(text(),'Edit')])[2]")).click();
+        driver.findElement(By.id("title")).clear();
+        driver.findElement(By.id("title")).sendKeys("");
+        driver.findElement(By.id("save")).click();
+        assertEquals("×\nWarning! You must give a title and some content in order to save an article :)", driver.findElement(By.id("form-alert")).getText());
     }
 
 }
