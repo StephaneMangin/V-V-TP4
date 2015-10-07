@@ -82,4 +82,13 @@ public class FunctionalNoLoginUseCasesTest {
         assertEquals("MdMS - Diversify", driver.getTitle());
     }
 
+    @Test
+    public void testLoginAssert() throws Exception {
+        driver.findElement(By.name("login")).clear();
+        driver.findElement(By.name("login")).sendKeys("admin");
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("admin");
+        driver.findElement(By.cssSelector("button.btn.btn-success")).click();
+        assertEquals("Hi admin! You are now signed in.\nYou will be automatically redirected to index in a few seconds...", driver.findElement(By.cssSelector("p")).getText());
+    }
 }
