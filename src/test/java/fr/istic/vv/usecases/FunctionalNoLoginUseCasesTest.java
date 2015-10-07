@@ -107,4 +107,14 @@ public class FunctionalNoLoginUseCasesTest {
         driver.findElement(By.cssSelector("button.btn.btn-success")).click();
         assertEquals("×\nWrong login and/or password", driver.findElement(By.xpath("//div[2]/div")).getText());
     }
+
+    @Test
+    public void testWrongLogin() throws Exception {
+        driver.findElement(By.name("login")).clear();
+        driver.findElement(By.name("login")).sendKeys("machin");
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("admin");
+        driver.findElement(By.cssSelector("button.btn.btn-success")).click();
+        assertEquals("×\nWrong login and/or password", driver.findElement(By.xpath("//div[2]/div")).getText());
+    }
 }
