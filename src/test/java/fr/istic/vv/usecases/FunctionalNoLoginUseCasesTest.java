@@ -94,8 +94,17 @@ public class FunctionalNoLoginUseCasesTest {
 
     @Test
     public void testEditNoLogin() throws Exception {
-        driver.get(baseUrl + "/");
         driver.findElement(By.xpath("(//a[contains(text(),'Edit')])[2]")).click();
         assertEquals("×\nYou are not allowed to access /edit/article_1 resource", driver.findElement(By.xpath("//div[2]/div")).getText());
+    }
+
+    @Test
+    public void testWrongPassword() throws Exception {
+        driver.findElement(By.name("login")).clear();
+        driver.findElement(By.name("login")).sendKeys("admin");
+        driver.findElement(By.name("password")).clear();
+        driver.findElement(By.name("password")).sendKeys("truc");
+        driver.findElement(By.cssSelector("button.btn.btn-success")).click();
+        assertEquals("×\nWrong login and/or password", driver.findElement(By.xpath("//div[2]/div")).getText());
     }
 }
