@@ -1,4 +1,4 @@
-package mdms;
+package fr.istic.vv.mdms;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -11,7 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +29,9 @@ public abstract class AbstractMDMSTest {
     // Parameters
     static String dockerURI = "http://127.0.0.1:5555";
     static String redisImageName = "redis";
-    static String mdmsImageName = "maxleiko/mdms";
-    static String redisContainerName = "mdms-redis";
-    static String mdmsContainerName = "mdms";
+    static String mdmsImageName = "maxleiko/fr.istic.vv.mdms";
+    static String redisContainerName = "fr.istic.vv.mdms-redis";
+    static String mdmsContainerName = "fr/istic/vv/mdms";
     static int portForward = 8080;
     static DockerClient dockerClient;
 
@@ -104,7 +103,7 @@ public abstract class AbstractMDMSTest {
         System.out.println("Connecting to docker URI " + dockerURI + " ...");
         dockerClient = DockerClientBuilder.getInstance(dockerURI).build();
 
-        // Destroying existing mdms containers
+        // Destroying existing fr.istic.vv.mdms containers
         destroyContainers();
 
         // We create and start the DB container
@@ -119,7 +118,7 @@ public abstract class AbstractMDMSTest {
         portBindings.bind(tcpPort, Ports.Binding(portForward));
 
         // We create the web container
-        System.out.println("Starting mdms container...");
+        System.out.println("Starting fr.istic.vv.mdms container...");
         response = dockerClient.createContainerCmd(mdmsImageName).withName(mdmsContainerName).withTty(true).withExposedPorts(tcpPort).exec();
         dockerClient.startContainerCmd(response.getId()).withLinks(new Link(redisContainerName, redisContainerName)).withPortBindings(portBindings).exec();
 
