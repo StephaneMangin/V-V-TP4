@@ -91,4 +91,11 @@ public class FunctionalNoLoginUseCasesTest {
         driver.findElement(By.cssSelector("button.btn.btn-success")).click();
         assertEquals("Hi admin! You are now signed in.\nYou will be automatically redirected to index in a few seconds...", driver.findElement(By.cssSelector("p")).getText());
     }
+
+    @Test
+    public void testEditNoLogin() throws Exception {
+        driver.get(baseUrl + "/");
+        driver.findElement(By.xpath("(//a[contains(text(),'Edit')])[2]")).click();
+        assertEquals("×\nYou are not allowed to access /edit/article_1 resource", driver.findElement(By.xpath("//div[2]/div")).getText());
+    }
 }
