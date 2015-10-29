@@ -1,20 +1,27 @@
 package fr.istic.vv.mdms;
 
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.PullImageCmd;
+import com.github.dockerjava.api.command.StartContainerCmd;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Link;
 import com.github.dockerjava.api.model.Ports;
-import com.github.dockerjava.jaxrs.DockerClientBuilder;
+import com.github.dockerjava.core.DockerClientBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import sun.net.www.http.HttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,10 +36,10 @@ public abstract class AbstractMDMSTest {
     // Parameters
     static String dockerURI = "http://127.0.0.1:5555";
     static String redisImageName = "redis";
-    static String mdmsImageName = "maxleiko/fr.istic.vv.mdms";
-    static String redisContainerName = "fr.istic.vv.mdms-redis";
-    static String mdmsContainerName = "fr/istic/vv/mdms";
-    static int portForward = 8080;
+    static String mdmsImageName = "maxleiko/mdms";
+    static String redisContainerName = "tp-mdms-redis";
+    static String mdmsContainerName = "tp-mdms";
+    protected static int portForward = 9090;
     static DockerClient dockerClient;
 
     static String asString(InputStream response) {
@@ -56,11 +63,10 @@ public abstract class AbstractMDMSTest {
 
     private static boolean downloadImage(String name) {
         System.out.println("Downloading/checking image " + name + "...");
-        InputStream response;
-        response = dockerClient.pullImageCmd(name).exec();
+        PullImageCmd response = dockerClient.pullImageCmd(name);
 
         // Hopefully ok if written somewhere "download complete"
-        return asString(response).contains("Download complete");
+        return response.getTag().contains("Download complete");
 
     }
 
@@ -71,9 +77,13 @@ public abstract class AbstractMDMSTest {
         allContainers = dockerClient.listContainersCmd().withShowAll(true).exec();
         // We remove all running containers
         for (Container c : allContainers) {
+            if (c.getNames() == null) {
+                break;
+            }
             for (String s : c.getNames()) {
                 if (s.equals("/" + redisContainerName) || s.equals("/" + mdmsContainerName)) {
                     System.out.println("Removing container " + c.getId());
+                    dockerClient.killContainerCmd(c.getId()).exec();
                     dockerClient.removeContainerCmd(c.getId()).withForce().exec();
                 }
             }
@@ -93,18 +103,19 @@ public abstract class AbstractMDMSTest {
 
     }
 
-    @Before
-    public void prepareWebApp() {
-
+    @BeforeClass
+    public static void setUpClass() {
         // We disable the logs of the Docekr API (uncomment to debug docker connection)
         disableLogs();
 
         // Connecting to the docker daemon
         System.out.println("Connecting to docker URI " + dockerURI + " ...");
         dockerClient = DockerClientBuilder.getInstance(dockerURI).build();
-
-        // Destroying existing fr.istic.vv.mdms containers
         destroyContainers();
+    }
+
+    @Before
+    public void prepareWebApp() {
 
         // We create and start the DB container
         System.out.println("Starting redis container...");
@@ -119,11 +130,17 @@ public abstract class AbstractMDMSTest {
 
         // We create the web container
         System.out.println("Starting fr.istic.vv.mdms container...");
-        response = dockerClient.createContainerCmd(mdmsImageName).withName(mdmsContainerName).withTty(true).withExposedPorts(tcpPort).exec();
-        dockerClient.startContainerCmd(response.getId()).withLinks(new Link(redisContainerName, redisContainerName)).withPortBindings(portBindings).exec();
+        CreateContainerCmd container = dockerClient.createContainerCmd(mdmsImageName);
+        container.withName(mdmsContainerName);
+        container.withTty(true);
+        container.withExposedPorts(tcpPort);
+        container.withLinks(new Link(redisContainerName, redisContainerName));
+        container.withPortBindings(portBindings);
+        response = container.exec();
+        StartContainerCmd instance = dockerClient.startContainerCmd(response.getId());
+        instance.exec();
 
-
-        System.out.println("Success! Web application available here: http://localhost:8080/");
+        System.out.println("Success! Web application available here: http://localhost:" + portForward);
 
     }
 
