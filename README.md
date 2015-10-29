@@ -11,5 +11,5 @@ Les tests ont été découpés en deux classes, apparences et droits sur authent
 
 ## Jmeter
 
-Jmeter n'est pas concluant avec la configuration imposée, les requetes aboutissent toutes mais pas entièrement avec le temps de réponse max de 30 millisec.
-Le fichier de configuration et els résultats bruts se trouve dans le répertoire jmeter.
+Jmeter n'est pas concluant avec la configuration imposée, les requetes aboutissent toutes mais pas entièrement dans le temps de réponse max de 30 millisec.
+Le fichier de configuration et les résultats bruts se trouvent dans le répertoire jmeter.

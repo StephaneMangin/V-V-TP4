@@ -11,8 +11,7 @@ import java.util.logging.Level;
 /**
  * Created by smangin on 28/10/15.
  *
- *
- * This helper class allow to keethe same instance of firefox to prevent multiple download for the same test class instance
+ * This helper class allow to keep a same instance of firefox
  */
 public abstract class SeleniumFacilities extends AbstractMDMSTest {
 
@@ -40,9 +39,6 @@ public abstract class SeleniumFacilities extends AbstractMDMSTest {
 
     @BeforeClass
     public static void setUpClass() {
-        // Bypass => Error in expression; ':' found after identifier "progid".
-        java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
-        // Selected generic driver to spedd up test processing
         driver = new FirefoxDriver();
         baseUrl = "http://localhost:8080";
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);

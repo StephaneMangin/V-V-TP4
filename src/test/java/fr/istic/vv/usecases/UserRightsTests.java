@@ -9,24 +9,52 @@ import static org.junit.Assert.*;
 
 public class UserRightsTests extends LoginFacilities {
 
+    /**
+     * Tests the edition of an article without authentication.
+     *
+     * @type Functional
+     * @oracle Should show a alert message
+     * @passed Yes
+     */
     @Test
     public void testEditNoLogin() throws Exception {
         driver.findElement(By.xpath("(//a[contains(text(),'Edit')])[1]")).click();
-        assertEquals("×\nYou are not allowed to access /edit/article_2 resource", driver.findElement(By.xpath("//div[2]/div")).getText());
+        assertEquals("×\nYou are not allowed to access /edit/article_2 resource", driver.findElement(By.id("form-alert")).getText());
     }
 
+    /**
+     * Tests authentication with a wrong username.
+     *
+     * @type Functional
+     * @oracle Should show a alert message
+     * @passed Yes
+     */
     @Test
     public void testUserRightsWrongPassword() throws Exception {
         login("admin", "truc");
-        assertEquals("×\nWrong login and/or password", driver.findElement(By.xpath("//div[2]/div")).getText());
+        assertEquals("×\nWrong login and/or password", driver.findElement(By.id("form-alert")).getText());
     }
 
+    /**
+     * Tests authentication with a wrong password.
+     *
+     * @type Functional
+     * @oracle Should show a alert message
+     * @passed Yes
+     */
     @Test
     public void testUserRightsWrongLogin() throws Exception {
         login("machin", "bidule");
-        assertEquals("×\nWrong login and/or password", driver.findElement(By.xpath("//div[2]/div")).getText());
+        assertEquals("×\nWrong login and/or password", driver.findElement(By.id("form-alert")).getText());
     }
 
+    /**
+     * Tests the creation of an article with authentication but without title.
+     *
+     * @type Functional
+     * @oracle Should show a alert message
+     * @passed Yes
+     */
     @Test
     public void testArticleCreateWithoutTitle() throws Exception {
         login("admin", "admin");
@@ -37,6 +65,13 @@ public class UserRightsTests extends LoginFacilities {
         assertEquals("×\nWarning! You must give a title and some content in order to add an article :)", driver.findElement(By.id("form-alert")).getText());
     }
 
+    /**
+     * Tests the creation of an article with authentication but wuthout content.
+     *
+     * @type Functional
+     * @oracle Should show a alert message
+     * @passed Yes
+     */
     @Test
     public void testArticleCreateWithoutContent() throws Exception {
         login("admin", "admin");
@@ -47,6 +82,13 @@ public class UserRightsTests extends LoginFacilities {
         assertEquals("×\nWarning! You must give a title and some content in order to add an article :)", driver.findElement(By.id("form-alert")).getText());
     }
 
+    /**
+     * Tests the creation of an article with authentication.
+     *
+     * @type Functional
+     * @oracle Should show the newly created article on the main page.
+     * @passed Yes
+     */
     @Test
     public void testArticleCreate() throws Exception {
         login("admin", "admin");
@@ -61,6 +103,13 @@ public class UserRightsTests extends LoginFacilities {
         assertTrue(isElementPresent(By.xpath("//p[contains(text(), 'This is my content')]")));
     }
 
+    /**
+     * Tests the deletion of an article with authentication.
+     *
+     * @type Functional
+     * @oracle Should show a confirmation message of the deletion
+     * @passed Yes
+     */
     @Test
     public void testArticleDelete() throws Exception {
         login("admin", "admin");

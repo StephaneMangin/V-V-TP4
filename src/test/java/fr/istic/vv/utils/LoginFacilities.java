@@ -5,6 +5,9 @@ import org.openqa.selenium.*;
 
 /**
  * Created by smangin on 28/10/15.
+ *
+ * This helper class add a login/logout support
+ *
  */
 public abstract class LoginFacilities extends SeleniumFacilities {
 
