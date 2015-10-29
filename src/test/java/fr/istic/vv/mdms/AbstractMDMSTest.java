@@ -103,8 +103,9 @@ public abstract class AbstractMDMSTest {
 
     }
 
-    @BeforeClass
-    public static void setUpClass() {
+    @Before
+    public void prepareWebApp() {
+
         // We disable the logs of the Docekr API (uncomment to debug docker connection)
         disableLogs();
 
@@ -112,10 +113,6 @@ public abstract class AbstractMDMSTest {
         System.out.println("Connecting to docker URI " + dockerURI + " ...");
         dockerClient = DockerClientBuilder.getInstance(dockerURI).build();
         destroyContainers();
-    }
-
-    @Before
-    public void prepareWebApp() {
 
         // We create and start the DB container
         System.out.println("Starting redis container...");

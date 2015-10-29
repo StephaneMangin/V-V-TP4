@@ -1,5 +1,6 @@
 package fr.istic.vv.utils;
 
+import fr.istic.vv.mdms.AbstractMDMSTest;
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -14,7 +15,7 @@ import java.util.logging.Level;
  *
  * This helper class allow to keethe same instance of firefox to prevent multiple download for the same test class instance
  */
-public abstract class SeleniumFacilities {//ID001// extends AbstractMDMSTest {
+public abstract class SeleniumFacilities extends AbstractMDMSTest {
 
     protected static WebDriver driver;
     protected static String baseUrl;
@@ -39,7 +40,7 @@ public abstract class SeleniumFacilities {//ID001// extends AbstractMDMSTest {
     }
 
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
         // Bypass => Error in expression; ':' found after identifier "progid".
         java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF);
         // Selected generic driver to spedd up test processing
