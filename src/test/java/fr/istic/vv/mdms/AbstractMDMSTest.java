@@ -39,7 +39,7 @@ public abstract class AbstractMDMSTest {
     static String mdmsImageName = "maxleiko/mdms";
     static String redisContainerName = "tp-mdms-redis";
     static String mdmsContainerName = "tp-mdms";
-    protected static int portForward = 9090;
+    protected static int portForward = 8080;
     static DockerClient dockerClient;
 
     static String asString(InputStream response) {

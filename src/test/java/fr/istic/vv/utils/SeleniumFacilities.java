@@ -4,7 +4,6 @@ import fr.istic.vv.mdms.AbstractMDMSTest;
 import org.junit.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
