@@ -64,7 +64,7 @@ public class UserRightsTests extends LoginFacilities {
     @Test
     public void testArticleDelete() throws Exception {
         login("admin", "admin");
-        driver.findElement(By.xpath("//div[@id='article_0']/h2/a")).click();
+        driver.findElement(By.xpath("//a[@href='delete/article_0']")).click();
         assertEquals("×\nArticle \"article_0\" deleted successfully", driver.findElement(By.className("alert-success")).getText());
     }
 
